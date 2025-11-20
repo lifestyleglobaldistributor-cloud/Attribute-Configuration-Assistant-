@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Aveva System Platform Attribute Configuration Assistant - Professional tool for SCADA/HMI developers">
+    <meta name="theme-color" content="#141414">
+    
+    <!-- SECURITY HEADERS -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>Aveva System Platform - Attribute Configuration Assistant</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2300B8D9'/><text y='70' font-size='50' fill='%23ffffff' text-anchor='middle' font-family='Arial'>A</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- BRIGHT ORANGE HAMBURGER MENU - Production Optimized -->
+    <button id="orange-hamburger" data-orange-menu="true" onclick="orangeToggleMenu(); return false;" aria-label="Open navigation menu" aria-expanded="false" style="
+        position: fixed !important;
+        top: 15px !important;
+        left: 15px !important;
+        z-index: 99999 !important;
+        width: 65px !important;
+        height: 65px !important;
+        background: linear-gradient(135deg, #FF6B35, #F7931E) !important;
+        border: 3px solid white !important;
+        border-radius: 15px !important;
+        color: white !important;
+        font-size: 30px !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4) !important;
+        outline: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.2s ease !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+    " 
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 12px 35px rgba(255, 107, 53, 0.6)'; this.style.background='linear-gradient(135deg, #E55A2B, #E5821A)';"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 25px rgba(255, 107, 53, 0.4)'; this.style.background='linear-gradient(135deg, #FF6B35, #F7931E)';"
+    onmousedown="this.style.transform='scale(0.95)';"
+    onmouseup="this.style.transform='scale(1.05)';">
+        ☰
+        <span class="sr-only">Toggle navigation menu</span>
+    </button>
+
+    <!-- Orange hamburger status - Production optimized -->
+    <div id="orange-status" style="
+        position: fixed !important;
+        top: 90px !important;
+        left: 15px !important;
+        background: rgba(255, 107, 53, 0.9) !important;
+        color: white !important;
+        padding: 12px 15px !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+        font-weight: bold !important;
+        z-index: 99998 !important;
+        border: 2px solid white !important;
+        max-width: 250px !important;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3) !important;
+    " role="status" aria-live="polite">
+        Menu ready. Click hamburger to open navigation.
+    </div>
+
+    <!-- ORANGE MENU SIDEBAR - Direct implementation to ensure it works -->
+    <div id="orange-menu-sidebar" style="
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 300px !important;
+        height: 100vh !important;
+        background: linear-gradient(180deg, #141414 0%, #1a1a1a 100%) !important;
+        border-right: 4px solid #FF6B35 !important;
+        z-index: 99997 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 0 50px rgba(255, 107, 53, 0.8) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        font-family: 'Inter', sans-serif !important;
+        overflow-y: auto !important;
+    ">
+        <!-- Sidebar Header -->
+        <div style="
+            padding: 20px !important;
+            border-bottom: 2px solid #333333 !important;
+            background: rgba(255, 107, 53, 0.1) !important;
+        ">
+            <h3 style="
+                color: #FF6B35 !important;
+                margin: 0 !important;
+                font-size: 18px !important;
+                font-weight: bold !important;
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+            ">🍔 ORANGE MENU</h3>
+            <p style="
+                color: #B3B3B3 !important;
+                margin: 5px 0 0 0 !important;
+                font-size: 12px !important;
+            ">Navigation Menu</p>
+        </div>
+        
+        <!-- Navigation Items -->
+        <div style="padding: 10px 0 !important;">
+            <div onclick="orangeNavigate('dashboard')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                📊 Dashboard
+            </div>
+            <div onclick="orangeNavigate('quick-reference')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                📚 Quick Reference
+            </div>
+            <div onclick="orangeNavigate('template-generator')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                🎯 Template Generator
+            </div>
+            <div onclick="orangeNavigate('data-type-wizard')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                ⚙️ Data Type Wizard
+            </div>
+            <div onclick="orangeNavigate('security-helper')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                🛡️ Security Helper
+            </div>
+            <div onclick="orangeNavigate('import-export')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                📤 Import/Export
+            </div>
+            <div onclick="orangeNavigate('template-repository')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                📁 Template Repository
+            </div>
+            <div onclick="orangeNavigate('configuration-validator')" style="
+                padding: 15px 20px !important;
+                cursor: pointer !important;
+                color: #FFFFFF !important;
+                border-left: 3px solid transparent !important;
+                transition: all 0.2s ease !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+            " onmouseover="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.borderLeftColor='#FF6B35';" onmouseout="this.style.background='transparent'; this.style.borderLeftColor='transparent';">
+                ✅ Configuration Validator
+            </div>
+        </div>
+        
+        <!-- Close button at bottom -->
+        <div style="margin-top: auto !important; padding: 20px !important; border-top: 2px solid #333333 !important;">
+            <button onclick="orangeCloseMenu()" style="
+                width: 100% !important;
+                padding: 12px !important;
+                background: linear-gradient(135deg, #FF6B35, #F7931E) !important;
+                color: white !important;
+                border: 2px solid white !important;
+                border-radius: 8px !important;
+                font-size: 14px !important;
+                font-weight: bold !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+            " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 53, 0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                ❌ Close Menu
+            </button>
+        </div>
+    </div>
+
+    <!-- Backdrop overlay -->
+    <div id="orange-menu-overlay" onclick="orangeCloseMenu()" style="
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0, 0, 0, 0.7) !important;
+        z-index: 99996 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: all 0.3s ease !important;
+        cursor: pointer !important;
+    "></div>
+
+    <script>
+    // ISOLATED ORANGE HAMBURGER - COMPLETELY SEPARATE FROM APP.JS
+    let orangeMenuState = {
+        isOpen: false,
+        sidebar: null,
+        overlay: null,
+        btn: null,
+        status: null
+    };
+
+    // Initialize orange hamburger system
+    function initOrangeHamburger() {
+        orangeMenuState.sidebar = document.getElementById('sidebar');
+        orangeMenuState.overlay = document.getElementById('sidebarOverlay');
+        orangeMenuState.btn = document.getElementById('orange-hamburger');
+        orangeMenuState.status = document.getElementById('orange-status');
+        
+        console.log('🍔 Orange Hamburger Initialized:', {
+            sidebar: !!orangeMenuState.sidebar,
+            overlay: !!orangeMenuState.overlay,
+            btn: !!orangeMenuState.btn,
+            status: !!orangeMenuState.status
+        });
+    }
+
+    // Toggle menu function - COMPLETELY ISOLATED
+    <script>
+    // COMPLETELY INDEPENDENT ORANGE MENU SYSTEM
+    let orangeMenu = {
+        isOpen: false,
+        sidebar: null,
+        overlay: null,
+        btn: null,
+        status: null
+    };
+
+    // Initialize orange menu system
+    function initOrangeMenu() {
+        orangeMenu.sidebar = document.getElementById('orange-menu-sidebar');
+        orangeMenu.overlay = document.getElementById('orange-menu-overlay');
+        orangeMenu.btn = document.getElementById('orange-hamburger');
+        orangeMenu.status = document.getElementById('orange-status');
+        
+        console.log('🍔 Orange Menu Initialized:', {
+            sidebar: !!orangeMenu.sidebar,
+            overlay: !!orangeMenu.overlay,
+            btn: !!orangeMenu.btn,
+            status: !!orangeMenu.status
+        });
+    }
+
+    // Toggle orange menu
+    function orangeToggleMenu() {
+        console.log('🍔 ORANGE MENU TOGGLE CLICKED!', new Date().toLocaleTimeString());
+        
+        // Initialize if needed
+        if (!orangeMenu.sidebar) {
+            initOrangeMenu();
+        }
+        
+        // Update status
+        const status = orangeMenu.status;
+        if (status) {
+            status.innerHTML = '🍔 Menu clicked at ' + new Date().toLocaleTimeString() + '<br>Processing...';
+        }
+        
+        // Button feedback
+        const btn = orangeMenu.btn;
+        if (btn) {
+            btn.style.transform = 'scale(0.9)';
+            btn.style.boxShadow = '0 12px 35px rgba(255, 107, 53, 0.8)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1.05)';
+            }, 150);
+        }
+        
+        // Toggle menu
+        orangeMenu.isOpen = !orangeMenu.isOpen;
+        console.log('🔄 Orange menu state:', orangeMenu.isOpen ? 'OPEN' : 'CLOSED');
+        
+        if (orangeMenu.sidebar) {
+            if (orangeMenu.isOpen) {
+                // OPEN MENU
+                orangeMenu.sidebar.style.transform = 'translateX(0)';
+                if (orangeMenu.overlay) {
+                    orangeMenu.overlay.style.opacity = '1';
+                    orangeMenu.overlay.style.visibility = 'visible';
+                }
+                document.body.style.overflow = 'hidden';
+                
+                console.log('🟢 Orange menu opened - sidebar sliding in from left!');
+                if (status) {
+                    status.innerHTML = '✅ Menu OPENED<br>Orange sidebar sliding in!<br>Click again to close!';
+                    status.style.background = 'rgba(59, 130, 246, 0.9)';
+                }
+            } else {
+                // CLOSE MENU
+                orangeMenu.sidebar.style.transform = 'translateX(-100%)';
+                if (orangeMenu.overlay) {
+                    orangeMenu.overlay.style.opacity = '0';
+                    orangeMenu.overlay.style.visibility = 'hidden';
+                }
+                document.body.style.overflow = 'auto';
+                
+                console.log('🔴 Orange menu closed');
+                if (status) {
+                    status.innerHTML = '✅ Menu CLOSED<br>Sidebar hidden!';
+                    status.style.background = 'rgba(34, 197, 94, 0.9)';
+                }
+            }
+        } else {
+            console.error('❌ Orange sidebar not found!');
+            if (status) {
+                status.innerHTML = '❌ Sidebar not found<br>Check console for errors';
+                status.style.background = 'rgba(239, 68, 68, 0.9)';
+            }
+        }
+    }
+
+    // Close orange menu
+    function orangeCloseMenu() {
+        console.log('❌ Closing orange menu...');
+        orangeMenu.isOpen = false;
+        if (orangeMenu.sidebar) {
+            orangeMenu.sidebar.style.transform = 'translateX(-100%)';
+        }
+        if (orangeMenu.overlay) {
+            orangeMenu.overlay.style.opacity = '0';
+            orangeMenu.overlay.style.visibility = 'hidden';
+        }
+        document.body.style.overflow = 'auto';
+        
+        if (orangeMenu.status) {
+            orangeMenu.status.innerHTML = '✅ Menu CLOSED<br>Closed by button click!';
+            orangeMenu.status.style.background = 'rgba(34, 197, 94, 0.9)';
+        }
+    }
+
+    // Navigate to section
+    function orangeNavigate(section) {
+        console.log('🧭 Navigating to:', section);
+        
+        // Switch to the requested section
+        const app = window.avevaApp;
+        if (app && typeof app.switchSection === 'function') {
+            app.switchSection(section);
+        }
+        
+        // Close the menu after navigation
+        orangeCloseMenu();
+        
+        // Show toast
+        if (window.avevaApp && typeof app.showToast === 'function') {
+            app.showToast(`Switched to ${section}`, 'info');
+        }
+    }
+
+    // Debug test function
+    function testOrangeMenu() {
+        console.log('🧪 TESTING ORANGE MENU');
+        const btn = document.getElementById('orange-hamburger');
+        const status = document.getElementById('orange-status');
+        const sidebar = document.getElementById('orange-menu-sidebar');
+        const overlay = document.getElementById('orange-menu-overlay');
+        
+        const allElements = {
+            btn: !!btn,
+            status: !!status,
+            sidebar: !!sidebar,
+            overlay: !!overlay
+        };
+        
+        if (allElements.btn && allElements.sidebar) {
+            console.log('✅ Orange menu test successful - All elements found');
+            status.innerHTML = '🧪 Orange menu test PASSED<br>Click the orange button!';
+            status.style.background = 'rgba(156, 39, 176, 0.9)';
+            return true;
+        } else {
+            console.error('❌ Orange menu test FAILED:', allElements);
+            status.innerHTML = '❌ Orange menu test FAILED<br>Elements missing!';
+            status.style.background = 'rgba(239, 68, 68, 0.9)';
+            return false;
+        }
+    }
+    
+    // Make functions globally available
+    window.orangeToggleMenu = orangeToggleMenu;
+    window.orangeCloseMenu = orangeCloseMenu;
+    window.orangeNavigate = orangeNavigate;
+    window.testOrangeMenu = testOrangeMenu;
+    
+    
+    // Initialize when page loads
+    window.addEventListener('load', function() {
+        initOrangeHamburger();
+        
+        const statusDiv = document.getElementById('orange-status');
+        if (statusDiv) {
+            statusDiv.innerHTML = '🍔 Orange Hamburger Ready!<br>Click to slide in menu from left';
+            statusDiv.style.background = 'rgba(34, 197, 94, 0.9)';
+        }
+    });
+
+    // Simplified click handler to close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        // Ignore clicks from the orange hamburger button
+        if (event.target && event.target.closest('[data-orange-menu]')) {
+            return;
+        }
+        
+        // Check if orange menu is open and close it when clicking outside
+        if (orangeMenu.sidebar && orangeMenu.isOpen) {
+            if (!orangeMenu.sidebar.contains(event.target)) {
+                orangeCloseMenu();
+                console.log('🔴 Orange menu closed by backdrop click');
+            }
+        }
+    });
+
+    console.log('🍔 ORANGE MENU SYSTEM LOADED SUCCESSFULLY');
+    console.log('💡 Use testOrangeMenu() in console to debug');
+    </script>
+
+    <div class="app-container">
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+            <i data-lucide="menu"></i>
+            <span class="sr-only">Menu</span>
+        </button>
+
+        <!-- Mobile Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="app-title">
+                    <h1>Aveva Attribute Config</h1>
+                    <p class="version">v2.1.0 - System Platform</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="dashboard">
+                    <i data-lucide="layout-dashboard" class="nav-icon"></i>
+                    <span class="nav-label">Dashboard</span>
+                </li>
+                <li class="nav-item" data-section="quick-reference">
+                    <i data-lucide="book-open" class="nav-icon"></i>
+                    <span class="nav-label">Quick Reference</span>
+                </li>
+                <li class="nav-item" data-section="template-generator">
+                    <i data-lucide="wizard-hat" class="nav-icon"></i>
+                    <span class="nav-label">Template Generator</span>
+                </li>
+                <li class="nav-item" data-section="data-type-wizard">
+                    <i data-lucide="cog" class="nav-icon"></i>
+                    <span class="nav-label">Data Type Wizard</span>
+                </li>
+                <li class="nav-item" data-section="security-helper">
+                    <i data-lucide="shield-check" class="nav-icon"></i>
+                    <span class="nav-label">Security Helper</span>
+                </li>
+                <li class="nav-item" data-section="import-export">
+                    <i data-lucide="upload-download" class="nav-icon"></i>
+                    <span class="nav-label">Import/Export</span>
+                </li>
+                <li class="nav-item" data-section="template-repository">
+                    <i data-lucide="library" class="nav-icon"></i>
+                    <span class="nav-label">Template Repository</span>
+                </li>
+                <li class="nav-item" data-section="configuration-validator">
+                    <i data-lucide="check-circle" class="nav-icon"></i>
+                    <span class="nav-label">Configuration Validator</span>
+                </li>
+                <li class="nav-item" data-section="saved-configs">
+                    <i data-lucide="folder-save" class="nav-icon"></i>
+                    <span class="nav-label">Saved Configs</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <header class="section-header">
+                    <h1>Dashboard</h1>
+                    <p class="section-description">Quick access to Aveva System Platform attribute configuration tools</p>
+                </header>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card" data-section="quick-reference">
+                        <div class="card-header">
+                            <h3>Quick Reference</h3>
+                            <i data-lucide="book-open" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Attribute types, categories, and property definitions</p>
+                        <div class="card-stats">
+                            <span class="stat">31 Data Types</span>
+                            <span class="stat">5 Categories</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="template-generator">
+                        <div class="card-header">
+                            <h3>Template Generator</h3>
+                            <i data-lucide="wizard-hat" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Create attribute templates with best practices validation</p>
+                        <div class="card-stats">
+                            <span class="stat">Auto-validation</span>
+                            <span class="stat">Best practices</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="template-repository">
+                        <div class="card-header">
+                            <h3>Template Repository</h3>
+                            <i data-lucide="library" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Pre-built, industry-standard templates for common equipment</p>
+                        <div class="card-stats">
+                            <span class="stat">45+ Templates</span>
+                            <span class="stat">Ready to Use</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="configuration-validator">
+                        <div class="card-header">
+                            <h3>Configuration Validator</h3>
+                            <i data-lucide="check-circle" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Validate naming conventions, best practices, and security compliance</p>
+                        <div class="card-stats">
+                            <span class="stat">Real-time Checking</span>
+                            <span class="stat">Auto-fix Suggestions</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="data-type-wizard">
+                        <div class="card-header">
+                            <h3>Data Type Wizard</h3>
+                            <i data-lucide="cog" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Interactive data type selection with performance analysis</p>
+                        <div class="card-stats">
+                            <span class="stat">Context-aware</span>
+                            <span class="stat">Performance metrics</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="security-helper">
+                        <div class="card-header">
+                            <h3>Security Helper</h3>
+                            <i data-lucide="shield-check" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Access levels, permissions, and security templates</p>
+                        <div class="card-stats">
+                            <span class="stat">Access control</span>
+                            <span class="stat">Security templates</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card" data-section="import-export">
+                        <div class="card-header">
+                            <h3>Import/Export</h3>
+                            <i data-lucide="upload-download" class="card-icon"></i>
+                        </div>
+                        <p class="card-description">Bulk operations with CSV/JSON format support</p>
+                        <div class="card-stats">
+                            <span class="stat">CSV & JSON</span>
+                            <span class="stat">Batch processing</span>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3>Recent Activity</h3>
+                            <i data-lucide="activity" class="card-icon"></i>
+                        </div>
+                        <div class="recent-activity">
+                            <div class="activity-item">
+                                <span class="activity-time">2 min ago</span>
+                                <span class="activity-action">Created Motor template</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">15 min ago</span>
+                                <span class="activity-action">Exported Process attributes</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-time">1 hour ago</span>
+                                <span class="activity-action">Updated security settings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference Section -->
+            <section id="quick-reference" class="content-section">
+                <header class="section-header">
+                    <h1>Quick Reference</h1>
+                    <p class="section-description">Comprehensive reference for Aveva System Platform attribute types and properties</p>
+                </header>
+
+                <div class="reference-controls">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="referenceSearch" placeholder="Search attributes, data types, or properties...">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">All Types</button>
+                        <button class="filter-tab" data-filter="analog">Analog I/O</button>
+                        <button class="filter-tab" data-filter="digital">Digital I/O</button>
+                        <button class="filter-tab" data-filter="string">String</button>
+                        <button class="filter-tab" data-filter="system">System</button>
+                    </div>
+                </div>
+
+                <div class="reference-grid" id="referenceGrid">
+                    <!-- Dynamic content will be populated here -->
+                </div>
+            </section>
+
+            <!-- Template Generator Section -->
+            <section id="template-generator" class="content-section">
+                <header class="section-header">
+                    <h1>Template Generator</h1>
+                    <p class="section-description">Create attribute templates following Aveva best practices</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Template Wizard</h3>
+                    </div>
+                    <div class="platform-content">
+                        <div class="wizard-container">
+                    <div class="wizard-stepper">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Basic Info</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Attributes</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Validation</div>
+                        </div>
+                        <div class="step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Export</div>
+                        </div>
+                    </div>
+
+                    <div class="wizard-content">
+                        <!-- Step 1: Basic Information -->
+                        <div class="wizard-step active" id="step1">
+                            <h3>Template Basic Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="templateName">Template Name *</label>
+                                    <input type="text" id="templateName" placeholder="e.g., MotorTemplate, ValveTemplate">
+                                    <small class="help-text">Use PascalCase naming convention</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="templateCategory">Category</label>
+                                    <select id="templateCategory">
+                                        <option value="equipment">Equipment</option>
+                                        <option value="process">Process</option>
+                                        <option value="system">System</option>
+                                        <option value="alarm">Alarm</option>
+                                        <option value="utility">Utility</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="templateDescription">Description</label>
+                                    <textarea id="templateDescription" rows="3" placeholder="Brief description of the template purpose"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Attributes -->
+                        <div class="wizard-step" id="step2">
+                            <h3>Define Attributes</h3>
+                            <div class="attributes-manager">
+                                <div class="attributes-header">
+                                    <button class="btn-primary" id="addAttribute">
+                                        <i data-lucide="plus"></i>
+                                        Add Attribute
+                                    </button>
+                                    <div class="attribute-templates">
+                                        <button class="btn-secondary template-btn" data-template="motor">Motor Template</button>
+                                        <button class="btn-secondary template-btn" data-template="valve">Valve Template</button>
+                                        <button class="btn-secondary template-btn" data-template="pump">Pump Template</button>
+                                    </div>
+                                </div>
+                                <div class="attributes-list" id="attributesList">
+                                    <!-- Dynamic attribute rows will be added here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Validation -->
+                        <div class="wizard-step" id="step3">
+                            <h3>Validation & Best Practices</h3>
+                            <div class="validation-results">
+                                <div class="validation-item success">
+                                    <i data-lucide="check-circle" class="status-icon"></i>
+                                    <span>Naming convention compliant</span>
+                                </div>
+                                <div class="validation-item success">
+                                    <i data-lucide="check-circle" class="status-icon"></i>
+                                    <span>Data type optimization passed</span>
+                                </div>
+                                <div class="validation-item warning">
+                                    <i data-lucide="alert-triangle" class="status-icon"></i>
+                                    <span>Consider adding quality attributes</span>
+                                </div>
+                                <div class="validation-item success">
+                                    <i data-lucide="check-circle" class="status-icon"></i>
+                                    <span>Security classification defined</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Export -->
+                        <div class="wizard-step" id="step4">
+                            <h3>Export Template</h3>
+                            <div class="export-options">
+                                <div class="export-format">
+                                    <h4>Export Format</h4>
+                                    <div class="format-options">
+                                        <label class="radio-option">
+                                            <input type="radio" name="exportFormat" value="json" checked>
+                                            <span>JSON (.json)</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="exportFormat" value="csv">
+                                            <span>CSV (.csv)</span>
+                                        </label>
+                                        <label class="radio-option">
+                                            <input type="radio" name="exportFormat" value="aveva">
+                                            <span>Aveva Format (.xml)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="export-actions">
+                                    <button class="btn-primary" id="previewExport">Preview</button>
+                                    <button class="btn-primary" id="downloadExport">Download</button>
+                                    <button class="btn-secondary" id="saveToLibrary">Save to Library</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="wizard-navigation">
+                            <button class="btn-secondary" id="prevStep" disabled>Previous</button>
+                            <button class="btn-primary" id="nextStep">Next</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <!-- Data Type Wizard Section -->
+            <section id="data-type-wizard" class="content-section">
+                <header class="section-header">
+                    <h1>Data Type Selection Wizard</h1>
+                    <p class="section-description">Intelligent data type selection based on use case and requirements</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Data Type Recommendation Engine</h3>
+                    </div>
+                    <div class="platform-content">
+                        <div class="dt-wizard-container">
+                    <p class="section-description">Context-aware data type recommendations for optimal performance</p>
+                </header>
+
+                <div class="wizard-container">
+                    <div class="data-type-wizard">
+                        <div class="wizard-stepper">
+                            <div class="step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">Use Case</div>
+                            </div>
+                            <div class="step" data-step="2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">Requirements</div>
+                            </div>
+                            <div class="step" data-step="3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">Recommendation</div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-content">
+                            <!-- Step 1: Use Case -->
+                            <div class="wizard-step active" id="dt-step1">
+                                <h3>Select Use Case</h3>
+                                <div class="use-case-grid">
+                                    <div class="use-case-card" data-case="analog-input">
+                                        <i data-lucide="trending-up" class="case-icon"></i>
+                                        <h4>Analog Input</h4>
+                                        <p>Temperature, pressure, flow measurements</p>
+                                    </div>
+                                    <div class="use-case-card" data-case="analog-output">
+                                        <i data-lucide="settings" class="case-icon"></i>
+                                        <h4>Analog Output</h4>
+                                        <p>Setpoint, control signal outputs</p>
+                                    </div>
+                                    <div class="use-case-card" data-case="digital-input">
+                                        <i data-lucide="toggle-left" class="case-icon"></i>
+                                        <h4>Digital Input</h4>
+                                        <p>Status, alarm, limit switches</p>
+                                    </div>
+                                    <div class="use-case-card" data-case="digital-output">
+                                        <i data-lucide="toggle-right" class="case-icon"></i>
+                                        <h4>Digital Output</h4>
+                                        <p>Control, command, enable signals</p>
+                                    </div>
+                                    <div class="use-case-card" data-case="string">
+                                        <i data-lucide="type" class="case-icon"></i>
+                                        <h4>String Data</h4>
+                                        <p>Names, descriptions, messages</p>
+                                    </div>
+                                    <div class="use-case-card" data-case="system">
+                                        <i data-lucide="cpu" class="case-icon"></i>
+                                        <h4>System Data</h4>
+                                        <p>Timestamps, quality, status</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Requirements -->
+                            <div class="wizard-step" id="dt-step2">
+                                <h3>Define Requirements</h3>
+                                <div class="requirements-form">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="precision">Precision Required</label>
+                                            <select id="precision">
+                                                <option value="integer">Integer only</option>
+                                                <option value="single">Single precision</option>
+                                                <option value="double">Double precision</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="range">Value Range</label>
+                                            <select id="range">
+                                                <option value="small">Small (-32K to 32K)</option>
+                                                <option value="medium">Medium (-2B to 2B)</option>
+                                                <option value="large">Large (Extended range)</option>
+                                                <option value="custom">Custom range</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="update-frequency">Update Frequency</label>
+                                            <select id="update-frequency">
+                                                <option value="realtime">Real-time (&lt;100ms)</option>
+                                                <option value="fast">Fast (100ms-1s)</option>
+                                                <option value="normal">Normal (1s-10s)</option>
+                                                <option value="slow">Slow (&gt;10s)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="historian">Historian Storage</label>
+                                            <select id="historian">
+                                                <option value="always">Always store</option>
+                                                <option value="change">On change only</option>
+                                                <option value="periodic">Periodic sampling</option>
+                                                <option value="never">Never store</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Recommendation -->
+                            <div class="wizard-step" id="dt-step3">
+                                <h3>Recommended Data Type</h3>
+                                <div class="recommendation-result">
+                                    <div class="recommended-type">
+                                        <div class="type-header">
+                                            <h4 id="recommendedType">REAL</h4>
+                                            <span class="performance-badge">Excellent Performance</span>
+                                        </div>
+                                        <div class="type-details">
+                                            <div class="detail-row">
+                                                <span class="detail-label">Data Type:</span>
+                                                <span class="detail-value" id="typeDetails">4-byte floating point</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Memory Usage:</span>
+                                                <span class="detail-value" id="memoryUsage">4 bytes per attribute</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Range:</span>
+                                                <span class="detail-value" id="valueRange">±3.4E38</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Precision:</span>
+                                                <span class="detail-value" id="precisionLevel">6-7 decimal digits</span>
+                                            </div>
+                                        </div>
+                                        <div class="type-recommendations">
+                                            <h5>Usage Recommendations</h5>
+                                            <ul id="usageRecommendations">
+                                                <li>Ideal for process variable measurements</li>
+                                                <li>Supports engineering units conversion</li>
+                                                <li>Compatible with trending and alarming</li>
+                                            </ul>
+                                        </div>
+                                        <div class="type-actions">
+                                            <button class="btn-primary" id="copyTypeDefinition">Copy Definition</button>
+                                            <button class="btn-secondary" id="addToTemplate">Add to Template</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wizard-navigation">
+                            <button class="btn-secondary" id="dt-prevStep" disabled>Previous</button>
+                            <button class="btn-primary" id="dt-nextStep">Next</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <!-- Security Helper Section -->
+            <section id="security-helper" class="content-section">
+                <header class="section-header">
+                    <h1>Security Classification Helper</h1>
+                    <p class="section-description">Access control, permissions, and security template management</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Security Configuration Platform</h3>
+                    </div>
+                    <div class="platform-content">
+                        <div class="security-wizard">
+                    <div class="security-overview">
+                        <div class="access-levels">
+                            <h3>Access Levels</h3>
+                            <div class="level-grid">
+                                <div class="level-card" data-level="read">
+                                    <h4>READ</h4>
+                                    <p>View-only access to attribute values</p>
+                                    <div class="level-permissions">
+                                        <span class="permission">Read Values</span>
+                                        <span class="permission">View Status</span>
+                                    </div>
+                                </div>
+                                <div class="level-card" data-level="operate">
+                                    <h4>OPERATE</h4>
+                                    <p>Operational control with limited write access</p>
+                                    <div class="level-permissions">
+                                        <span class="permission">Read Values</span>
+                                        <span class="permission">Write Values</span>
+                                        <span class="permission">Acknowledge</span>
+                                    </div>
+                                </div>
+                                <div class="level-card" data-level="engineer">
+                                    <h4>ENGINEER</h4>
+                                    <p>Full engineering access with configuration rights</p>
+                                    <div class="level-permissions">
+                                        <span class="permission">Read Values</span>
+                                        <span class="permission">Write Values</span>
+                                        <span class="permission">Configure</span>
+                                        <span class="permission">Download/Upload</span>
+                                    </div>
+                                </div>
+                                <div class="level-card" data-level="admin">
+                                    <h4>ADMIN</h4>
+                                    <p>Complete system administration access</p>
+                                    <div class="level-permissions">
+                                        <span class="permission">All Permissions</span>
+                                        <span class="permission">User Management</span>
+                                        <span class="permission">System Configuration</span>
+                                        <span class="permission">Security Settings</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="security-templates">
+                            <h3>Security Templates</h3>
+                            <div class="template-list">
+                                <div class="template-item" data-template="plant-operator">
+                                    <div class="template-header">
+                                        <h4>Plant Operator</h4>
+                                        <button class="btn-secondary apply-template">Apply</button>
+                                    </div>
+                                    <p>Standard operator access for process monitoring and control</p>
+                                    <div class="template-levels">
+                                        <span class="level-badge read">READ</span>
+                                        <span class="level-badge operate">OPERATE</span>
+                                    </div>
+                                </div>
+                                <div class="template-item" data-template="maintenance-tech">
+                                    <div class="template-header">
+                                        <h4>Maintenance Technician</h4>
+                                        <button class="btn-secondary apply-template">Apply</button>
+                                    </div>
+                                    <p>Maintenance access with diagnostic capabilities</p>
+                                    <div class="template-levels">
+                                        <span class="level-badge engineer">ENGINEER</span>
+                                        <span class="level-badge operate">OPERATE</span>
+                                    </div>
+                                </div>
+                                <div class="template-item" data-template="system-admin">
+                                    <div class="template-header">
+                                        <h4>System Administrator</h4>
+                                        <button class="btn-secondary apply-template">Apply</button>
+                                    </div>
+                                    <p>Complete system administration and security management</p>
+                                    <div class="template-levels">
+                                        <span class="level-badge admin">ADMIN</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <!-- Import/Export Section -->
+            <section id="import-export" class="content-section">
+                <header class="section-header">
+                    <h1>Import/Export Tools</h1>
+                    <p class="section-description">Bulk operations for attribute configurations</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Data Exchange Platform</h3>
+                    </div>
+                    <div class="platform-content">
+                        <div class="import-export-container">
+                    <div class="export-section">
+                        <div class="section-card">
+                            <h3>Export Attributes</h3>
+                            <div class="export-options">
+                                <div class="option-group">
+                                    <label>Export Format:</label>
+                                    <select id="exportFormat">
+                                        <option value="csv">CSV - Comma Separated Values</option>
+                                        <option value="json">JSON - JavaScript Object Notation</option>
+                                        <option value="aveva">Aveva XML Format</option>
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label>Include:</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" id="includeDataTypes" checked>
+                                            <span>Data types and properties</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" id="includeSecurity" checked>
+                                            <span>Security classifications</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" id="includeTemplates">
+                                            <span>Template relationships</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" id="includeComments">
+                                            <span>Comments and descriptions</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="export-actions">
+                                    <button class="btn-primary" id="exportBtn">
+                                        <i data-lucide="download"></i>
+                                        Export
+                                    </button>
+                                    <button class="btn-secondary" id="previewExport">
+                                        <i data-lucide="eye"></i>
+                                        Preview
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="import-section">
+                        <div class="section-card">
+                            <h3>Import Attributes</h3>
+                            <div class="import-options">
+                                <div class="file-upload">
+                                    <div class="upload-area" id="uploadArea">
+                                        <i data-lucide="upload-cloud" class="upload-icon"></i>
+                                        <h4>Drop files here or click to browse</h4>
+                                        <p>Supports CSV, JSON, and Aveva XML formats</p>
+                                        <input type="file" id="fileInput" accept=".csv,.json,.xml" hidden>
+                                        <button class="btn-secondary" id="browseFiles">Browse Files</button>
+                                    </div>
+                                </div>
+                                <div class="import-options-panel">
+                                    <div class="option-group">
+                                        <label>Import Mode:</label>
+                                        <select id="importMode">
+                                            <option value="create">Create new attributes</option>
+                                            <option value="update">Update existing attributes</option>
+                                            <option value="merge">Merge with existing</option>
+                                        </select>
+                                    </div>
+                                    <div class="option-group">
+                                        <label>Validation Level:</label>
+                                        <select id="validationLevel">
+                                            <option value="strict">Strict - Validate all properties</option>
+                                            <option value="moderate">Moderate - Validate required fields</option>
+                                            <option value="loose">Loose - Import with warnings</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="import-actions">
+                                    <button class="btn-primary" id="importBtn" disabled>
+                                        <i data-lucide="upload"></i>
+                                        Import
+                                    </button>
+                                    <button class="btn-secondary" id="validateBtn" disabled>
+                                        <i data-lucide="check-circle"></i>
+                                        Validate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="batch-operations">
+                        <div class="section-card">
+                            <h3>Batch Operations</h3>
+                            <div class="batch-tools">
+                                <div class="batch-tool">
+                                    <h4>Data Type Conversion</h4>
+                                    <p>Convert multiple attributes to new data types</p>
+                                    <button class="btn-secondary">Open Tool</button>
+                                </div>
+                                <div class="batch-tool">
+                                    <h4>Security Classification</h4>
+                                    <p>Apply security levels to attribute groups</p>
+                                    <button class="btn-secondary">Open Tool</button>
+                                </div>
+                                <div class="batch-tool">
+                                    <h4>Templates Migration</h4>
+                                    <p>Migrate attributes between template versions</p>
+                                    <button class="btn-secondary">Open Tool</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </section>
+
+            <!-- Template Repository Section -->
+            <section id="template-repository" class="content-section">
+                <header class="section-header">
+                    <h1>Template Repository</h1>
+                    <p class="section-description">Pre-built, industry-standard templates for common Aveva equipment types</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Template Library Browser</h3>
+                        <div class="repository-controls">
+                            <input type="text" class="search-box" id="templateSearch" placeholder="Search templates...">
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="">All Categories</option>
+                                <option value="equipment">Equipment</option>
+                                <option value="process">Process</option>
+                                <option value="sensors">Sensors</option>
+                                <option value="actuators">Actuators</option>
+                                <option value="instruments">Instruments</option>
+                                <option value="utility">Utility</option>
+                            </select>
+                            <button class="btn-secondary" id="resetFilters">
+                                <i data-lucide="rotate-ccw"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="platform-content">
+                        <div class="template-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTemplates">45+</div>
+                                <div class="stat-label">Available Templates</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="popularTemplates">12</div>
+                                <div class="stat-label">Popular Templates</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="recentlyUsed">8</div>
+                                <div class="stat-label">Recently Used</div>
+                            </div>
+                        </div>
+
+                        <div class="template-grid" id="templateGrid">
+                            <!-- Template cards will be populated dynamically -->
+                        </div>
+
+                        <div class="template-actions">
+                            <button class="btn-primary" id="loadMoreTemplates">
+                                <i data-lucide="plus"></i>
+                                Load More Templates
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration Validator Section -->
+            <section id="configuration-validator" class="content-section">
+                <header class="section-header">
+                    <h1>Configuration Validator</h1>
+                    <p class="section-description">Real-time validation of Aveva configurations with best practices and compliance checking</p>
+                </header>
+
+                <div class="platform-container">
+                    <div class="platform-header">
+                        <h3>Validation Platform</h3>
+                        <div class="validator-controls">
+                            <button class="btn-secondary" id="validateCurrentConfig">
+                                <i data-lucide="play"></i>
+                                Run Validation
+                            </button>
+                            <button class="btn-secondary" id="autoFixIssues">
+                                <i data-lucide="wand-2"></i>
+                                Auto-fix Issues
+                            </button>
+                            <button class="btn-secondary" id="exportValidationReport">
+                                <i data-lucide="download"></i>
+                                Export Report
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="platform-content">
+                        <div class="validation-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="validationScore">95</div>
+                                <div class="stat-label">Validation Score</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="criticalIssues">2</div>
+                                <div class="stat-label">Critical Issues</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="warningsCount">5</div>
+                                <div class="stat-label">Warnings</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="fixedIssues">8</div>
+                                <div class="stat-label">Auto-fixed</div>
+                            </div>
+                        </div>
+
+                        <div class="validation-tabs">
+                            <div class="tab-header">
+                                <button class="tab-btn active" data-tab="naming">Naming Conventions</button>
+                                <button class="tab-btn" data-tab="best-practices">Best Practices</button>
+                                <button class="tab-btn" data-tab="security">Security Compliance</button>
+                                <button class="tab-btn" data-tab="performance">Performance Impact</button>
+                            </div>
+
+                            <div class="tab-content active" id="naming-tab">
+                                <div class="validation-category">
+                                    <h4><i data-lucide="type"></i> Naming Convention Compliance</h4>
+                                    <div class="validation-list" id="namingValidationList">
+                                        <!-- Naming validation results will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="best-practices-tab">
+                                <div class="validation-category">
+                                    <h4><i data-lucide="lightbulb"></i> Best Practices Checklist</h4>
+                                    <div class="validation-list" id="bestPracticesList">
+                                        <!-- Best practices validation results -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="security-tab">
+                                <div class="validation-category">
+                                    <h4><i data-lucide="shield"></i> Security Compliance</h4>
+                                    <div class="validation-list" id="securityValidationList">
+                                        <!-- Security validation results -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-content" id="performance-tab">
+                                <div class="validation-category">
+                                    <h4><i data-lucide="zap"></i> Performance Analysis</h4>
+                                    <div class="validation-list" id="performanceValidationList">
+                                        <!-- Performance validation results -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="validation-actions">
+                            <button class="btn-primary" id="validateAndApply">
+                                <i data-lucide="check"></i>
+                                Validate & Apply Fixes
+                            </button>
+                            <button class="btn-secondary" id="generateRecommendations">
+                                <i data-lucide="file-text"></i>
+                                Generate Recommendations
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i data-lucide="check-circle" class="toast-icon"></i>
+            <span class="toast-message" id="toastMessage">Action completed successfully</span>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script src="app-production.js"></script>
+</body>
+</html>
